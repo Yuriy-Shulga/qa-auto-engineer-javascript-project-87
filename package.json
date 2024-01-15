@@ -1,0 +1,38 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Compares two configuration files and shows a difference.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "genDiff": "bin/genDiff.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuriy-Shulga/qa-auto-engineer-javascript-project-87.git"
+  },
+  "keywords": [
+    "cli",
+    "compare",
+    "diff",
+    "json",
+    "yaml"
+  ],
+  "author": "Yuriy Shulga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuriy-Shulga/qa-auto-engineer-javascript-project-87/issues"
+  },
+  "homepage": "https://github.com/Yuriy-Shulga/qa-auto-engineer-javascript-project-87#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1"
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
+  }
+}
