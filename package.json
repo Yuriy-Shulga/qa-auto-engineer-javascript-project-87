@@ -33,6 +33,7 @@
     "eslint-plugin-import": "^2.29.1"
   },
   "dependencies": {
-    "commander": "^11.1.0"
+    "commander": "^11.1.0",
+    "lodash": "^4.17.21"
   }
 }
