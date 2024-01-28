@@ -1,18 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
-
-const parser = (filepath, extension) => {
-  const data = fs.readFileSync(filepath, 'utf8');
-
-  switch (extension) {
-    case '.json':
-      return JSON.parse(data);
-    default:
-      console.log('Расширение не поддерживается!\n');
-      throw new Error('an unknown extension');
-  }
-};
+import parser from './src/parsers.js';
 
 const compare = (obj1, obj2) => {
   const keys = _.sortBy(Object.keys({ ...obj1, ...obj2 }));
@@ -37,9 +26,9 @@ const compare = (obj1, obj2) => {
 
 const genDiff = (filepath1, filepath2) => {
   const ext1 = path.extname(filepath1);
-  const obj1 = parser(filepath1, ext1);
+  const obj1 = parser(fs.readFileSync(filepath1, 'utf8'), ext1);
   const ext2 = path.extname(filepath2);
-  const obj2 = parser(filepath2, ext2);
+  const obj2 = parser(fs.readFileSync(filepath2, 'utf8'), ext2);
 
   return compare(obj1, obj2);
 };
