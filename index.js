@@ -1,36 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import _ from 'lodash';
+
 import parser from './src/parsers.js';
+import genFormatting from './src/formatters/index.js';
+import genDiffTree from './src/genDiffTree.js';
 
-const compare = (obj1, obj2) => {
-  const keys = _.sortBy(Object.keys({ ...obj1, ...obj2 }));
-  const result = keys.map((key) => {
-    if (Object.hasOwn(obj1, key) && !Object.hasOwn(obj2, key)) {
-      return `  - ${key}: ${obj1[key]}`;
-    }
-
-    if (!Object.hasOwn(obj1, key) && Object.hasOwn(obj2, key)) {
-      return `  + ${key}: ${obj2[key]}`;
-    }
-
-    if (obj1[key] !== obj2[key]) {
-      return `  - ${key}: ${obj1[key]}\n  + ${key}: ${obj2[key]}`;
-    }
-
-    return `    ${key}: ${obj1[key]}`;
-  });
-
-  return `{\n${result.join('\n')}\n}`;
-};
-
-const genDiff = (filepath1, filepath2) => {
+const genDiff = (filepath1, filepath2, format) => {
   const ext1 = path.extname(filepath1);
   const obj1 = parser(fs.readFileSync(filepath1, 'utf8'), ext1);
   const ext2 = path.extname(filepath2);
   const obj2 = parser(fs.readFileSync(filepath2, 'utf8'), ext2);
 
-  return compare(obj1, obj2);
+  return genFormatting(genDiffTree(obj1, obj2), format);
 };
 
 export default genDiff;
