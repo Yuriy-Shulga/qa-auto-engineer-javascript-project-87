@@ -18,4 +18,11 @@ describe('nested', () => {
 
     expect(genDiff(filepath1, filepath2)).toBe(diff);
   });
+
+  test('nested yml', () => {
+    const filepath1 = getFixturePath('nested1.yml');
+    const filepath2 = getFixturePath('nested2.yml');
+
+    expect(genDiff(filepath1, filepath2)).toBe(diff);
+  });
 });
