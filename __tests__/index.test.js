@@ -8,21 +8,40 @@ const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-describe('nested', () => {
-  const diffpath = getFixturePath('nested_result.string');
+describe('stylish', () => {
+  const diffpath = getFixturePath('stylish.string');
   const diff = fs.readFileSync(diffpath, 'utf8');
 
-  test('nested json', () => {
-    const filepath1 = getFixturePath('nested1.json');
-    const filepath2 = getFixturePath('nested2.json');
+  test('stylish json', () => {
+    const filepath1 = getFixturePath('file1.json');
+    const filepath2 = getFixturePath('file2.json');
 
     expect(genDiff(filepath1, filepath2)).toBe(diff);
   });
 
-  test('nested yml', () => {
-    const filepath1 = getFixturePath('nested1.yml');
-    const filepath2 = getFixturePath('nested2.yml');
+  test('stylish yml', () => {
+    const filepath1 = getFixturePath('file1.yml');
+    const filepath2 = getFixturePath('file2.yml');
 
     expect(genDiff(filepath1, filepath2)).toBe(diff);
+  });
+});
+
+describe('plain', () => {
+  const diffpath = getFixturePath('plain.string');
+  const diff = fs.readFileSync(diffpath, 'utf8');
+
+  test('plain json', () => {
+    const filepath1 = getFixturePath('file1.json');
+    const filepath2 = getFixturePath('file2.json');
+
+    expect(genDiff(filepath1, filepath2, 'plain')).toBe(diff);
+  });
+
+  test('plain yml', () => {
+    const filepath1 = getFixturePath('file1.yml');
+    const filepath2 = getFixturePath('file2.yml');
+
+    expect(genDiff(filepath1, filepath2, 'plain')).toBe(diff);
   });
 });
