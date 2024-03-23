@@ -1,41 +1,55 @@
+import _ from 'lodash';
+
+const replacer = '    ';
+const getIndent = (depth) => replacer.repeat(depth);
+
+const operators = {
+  added: '+',
+  removed: '-',
+  unchanged: ' ',
+  nested: ' ',
+};
+
 export default (diffs) => {
-  const iter = (currDiffs, depth = 0) => {
-    const space = '    '.repeat(depth);
-    const closeBracketSpace = '    '.repeat(depth);
-    const result = currDiffs.map((currDiff) => {
-      const [operator, key, value] = currDiff;
+  const getValue = (value, depth) => {
+    const currentIndent = getIndent(depth + 1);
+    const bracketIndent = getIndent(depth);
 
-      if (!Array.isArray(value)) {
-        return `${space}  ${operator} ${key}: ${value}`;
-      }
+    if (!_.isObject(value)) {
+      return value;
+    }
 
-      if (operator === '-') {
-        return `${space}  ${operator} ${key}: ${iter(value, depth + 1)}`;
-      }
+    const values = Object
+      .entries(value)
+      .map(([key, currentValue]) => `${currentIndent}${key}: ${getValue(currentValue, depth + 1)}`);
 
-      if (operator === '+') {
-        return `${space}  ${operator} ${key}: ${iter(value, depth + 1)}`;
-      }
-
-      if (operator === ' ') {
-        return `${space}  ${operator} ${key}: ${iter(value, depth + 1)}`;
-      }
-
-      if (!Array.isArray(value[0]) && !Array.isArray(value[1])) {
-        return `${space}  ${operator[0]} ${key}: ${(value[0])}\n${space}  ${operator[1]} ${key}: ${(value[1])}`;
-      }
-
-      if (!Array.isArray(value[0])) {
-        const before = `${space}  ${operator[0]} ${key}: ${(value[0])}`;
-        const after = `${space}  ${operator[1]} ${key}: ${iter(value[1], depth + 1)}`;
-        return `${before}\n${after}`;
-      }
-
-      return `${space}  ${operator[0]} ${key}: ${iter(value[0], depth + 1)}\n${space}  ${operator[1]} ${key}: ${(value[1])}`;
-    });
-
-    return `{\n${result.join('\n')}\n${closeBracketSpace}}`;
+    return `{\n${values.join('\n')}\n${bracketIndent}}`;
   };
 
-  return iter(diffs, 0);
+  const iter = (currDiffs, depth) => {
+    const currentIndent = getIndent(depth - 1);
+
+    const result = currDiffs.map((currDiff) => {
+      const {
+        key, status, value, children,
+      } = currDiff;
+
+      if (status === 'modified') {
+        const [oldValue, newValue] = value;
+        const add = `${currentIndent}  ${operators.removed} ${key}: ${getValue(oldValue, depth)}`;
+        const rm = `${currentIndent}  ${operators.added} ${key}: ${getValue(newValue, depth)}`;
+        return `${add}\n${rm}`;
+      }
+
+      if (status === 'nested') {
+        return `${currentIndent}  ${operators[status]} ${key}: ${iter(children, depth + 1)}`;
+      }
+
+      return `${currentIndent}  ${operators[status]} ${key}: ${getValue(value, depth)}`;
+    });
+
+    return `{\n${result.join('\n')}\n${currentIndent}}`;
+  };
+
+  return iter(diffs, 1);
 };
