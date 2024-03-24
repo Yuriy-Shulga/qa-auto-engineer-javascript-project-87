@@ -8,40 +8,22 @@ const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-describe('stylish', () => {
-  const diffpath = getFixturePath('stylish.string');
-  const diff = fs.readFileSync(diffpath, 'utf8');
+describe('formatters', () => {
+  const json1 = getFixturePath('file1.json');
+  const json2 = getFixturePath('file2.json');
+  const yml1 = getFixturePath('file1.yml');
+  const yml2 = getFixturePath('file2.yml');
 
-  test('stylish json', () => {
-    const filepath1 = getFixturePath('file1.json');
-    const filepath2 = getFixturePath('file2.json');
+  const stylishDiff = fs.readFileSync(getFixturePath('stylish.string'), 'utf8');
+  const plainDiff = fs.readFileSync(getFixturePath('plain.string'), 'utf8');
 
-    expect(genDiff(filepath1, filepath2)).toBe(diff);
+  test('stylish', () => {
+    expect(genDiff(json1, json2, 'stylish')).toBe(stylishDiff);
+    expect(genDiff(yml1, yml2, 'stylish')).toBe(stylishDiff);
   });
 
-  test('stylish yml', () => {
-    const filepath1 = getFixturePath('file1.yml');
-    const filepath2 = getFixturePath('file2.yml');
-
-    expect(genDiff(filepath1, filepath2)).toBe(diff);
-  });
-});
-
-describe('plain', () => {
-  const diffpath = getFixturePath('plain.string');
-  const diff = fs.readFileSync(diffpath, 'utf8');
-
-  test('plain json', () => {
-    const filepath1 = getFixturePath('file1.json');
-    const filepath2 = getFixturePath('file2.json');
-
-    expect(genDiff(filepath1, filepath2, 'plain')).toBe(diff);
-  });
-
-  test('plain yml', () => {
-    const filepath1 = getFixturePath('file1.yml');
-    const filepath2 = getFixturePath('file2.yml');
-
-    expect(genDiff(filepath1, filepath2, 'plain')).toBe(diff);
+  test('plain', () => {
+    expect(genDiff(json1, json2, 'plain')).toBe(plainDiff);
+    expect(genDiff(yml1, yml2, 'plain')).toBe(plainDiff);
   });
 });
