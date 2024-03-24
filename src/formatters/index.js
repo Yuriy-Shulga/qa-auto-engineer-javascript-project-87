@@ -10,7 +10,7 @@ const genFormatting = (diff, format = 'stylish') => {
       return plain(diff);
 
     default:
-      throw new Error('an unknown format');
+      throw new Error('The unknown format!');
   }
 };
 

@@ -8,8 +8,7 @@ const parser = (data, extension) => {
     case '.yml':
       return yaml.load(data);
     default:
-      console.log('Расширение не поддерживается!\n');
-      throw new Error('an unknown extension');
+      throw Error('The unknown extension!');
   }
 };
 
